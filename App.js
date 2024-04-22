@@ -7,6 +7,8 @@ import AppNavigator from './app/navigation/AppNavigator';
 import authStorage from './app/auth/storage';
 import chowsApi from './app/api/chows';
 import RegisterScreen from './app/screens/RegisterScreen';
+import LoginScreen from './app/screens/LoginScreen';
+
 
 function App() {
   const [user, setUser] = useState();
@@ -42,8 +44,8 @@ function App() {
   };
 
   useEffect(() => {
-    restoreToken();
-    // removeToken();
+    // restoreToken();
+    removeToken();
   }, []);
 
   useEffect(() => {
@@ -56,6 +58,7 @@ function App() {
     <AuthContext.Provider value={{user, chows, setUser}}>
       <NavigationContainer>
        {user ? <AppNavigator /> : <AuthNavigator />}
+{/* <RegisterScreen /> */}
       </NavigationContainer>
     </AuthContext.Provider>
   );

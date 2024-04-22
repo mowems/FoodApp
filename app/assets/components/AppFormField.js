@@ -3,29 +3,32 @@ import { Text, TextInput, View, StyleSheet } from 'react-native';
 import { useFormikContext } from 'formik';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-function AppFormField({ fieldName, iconName, ...otherProps }) {
+function AppFormField({ fieldName, iconName, onPress, ...otherProps }) {
   const { errors, handleChange, setFieldTouched, touched } = useFormikContext();
 
   return (
     <>
-      <Text style={styles.labelText}>{fieldName}</Text>
-      <View style={styles.container}>
-        <TextInput
-          onChangeText={handleChange(fieldName)}
-          onBlur={() => setFieldTouched(fieldName)}
-          style={styles.textInput}
-          {...otherProps}
-        />
-        <MaterialCommunityIcons
-          name={iconName}
-          size={20}
-          color='#716f6f'
-          style={styles.icon}
-        />
+      <View style={styles.mainContainer}>
+        <Text style={styles.labelText}>{fieldName}</Text>
+        <View style={styles.container}>
+          <TextInput
+            onChangeText={handleChange(fieldName)}
+            onBlur={() => setFieldTouched(fieldName)}
+            style={styles.textInput}
+            {...otherProps}
+          />
+          <MaterialCommunityIcons
+            name={iconName}
+            size={20}
+            color='#716f6f'
+            style={styles.icon}
+            onPress={onPress}
+          />
+        </View>
+        {touched[fieldName] &&
+          <Text style={{ fontSize: 10, color: 'red', }}>{errors[fieldName]}</Text>
+        }
       </View>
-      {touched[fieldName] &&
-        <Text style={{ fontSize: 10, color: 'red' }}>{errors[fieldName]}</Text>
-      }
     </>
   );
 }
@@ -36,6 +39,9 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 20,
+  },
+  mainContainer: {
+    height: 90,
   },
   container: {
     display: 'flex',

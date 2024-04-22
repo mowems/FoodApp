@@ -30,6 +30,8 @@ const validationSchema = Yup.object().shape({
 function LoginScreen({ navigation }) {
   const authContext = useContext(AuthContext);
   const [loginFailed, setLoginFailed] = useState(false);
+  const [passwrdIcon, setPasswrdIcon] = useState('eye-off');
+  const [hidden, setHidden] = useState(true);
   const [fontsLoaded, fontError] = useFonts({
     'Inter-Bold': require('../assets/fonts/Inter-Bold.ttf'),
     'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
@@ -58,15 +60,33 @@ function LoginScreen({ navigation }) {
     authStorage.storeUser(JSON.stringify(user));
   }
 
+  const onPress = () => {
+    navigation.navigate('Welcome');
+  }
+
+  const onPressIcon = () => {
+    if (passwrdIcon === "eye-off") {
+      setHidden(false);
+      setPasswrdIcon("eye");
+    } else {
+      setHidden(true);
+      setPasswrdIcon("eye-off");
+    }
+  }
+
+  const navToRegister = () => {
+    navigation.replace('Register')
+  }
+
   return (
     <SafeAreaView style={styles.container} >
-      <WavyHeader cy="0" fill={colors.primary} />
-      <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
-        <Ionicons name="chevron-back" size={24} color="white" style={{top: 40, left: 20}}/>
+      <WavyHeader cy="-10" fill={colors.primary} />
+      <TouchableOpacity style={styles.backIcon} onPress={onPress}>
+        <Ionicons name="chevron-back" size={34} color="white"/>
       </TouchableOpacity>
       <View style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
         <View style={styles.imageContainer}>
-          <AppText style={{ top: 35, fontSize: 34, fontWeight: 700, color: "#ffffff" }} text="Login" />
+          <AppText style={{ fontSize: 34, fontWeight: 700, color: "#ffffff" }} text="Login" />
           <Image style={{ width: 125, height: 316, marginLeft: 110, }} source={require('../assets/man.png')} />
         </View>
         <Formik
@@ -74,11 +94,11 @@ function LoginScreen({ navigation }) {
           onSubmit={handleSubmitForm}
           validationSchema={validationSchema}
         >
-          { ({ errors, handleChange, handleSubmit, setFieldTouched, values, touched }) => (
+          { ({ errors, handleChange, handleSubmit, resetForm, setFieldTouched, values, touched }) => (
             <>
               <View style={styles.inputContainer1}>
                 {loginFailed &&
-                  <Text style={{ fontSize: 10, color: 'red' }}>Invalid email and/or password.</Text>
+                  <Text style={{ fontSize: 10, color: 'red', }}>Invalid email and/or password.</Text>
                 }
                 <AppFormField
                   fieldName="email"
@@ -87,13 +107,14 @@ function LoginScreen({ navigation }) {
                   keyboardType="email-address"
                 />
               </View>
-              <View style={styles.inputContainer2}>
-                <AppFormField
+             <View style={styles.inputContainer2}>
+                 <AppFormField
                   fieldName="password"
-                  iconName="eye-off"
+                  iconName={passwrdIcon}
+                  onPress={onPressIcon}
                   placeholder="your password"
                   value={values.password}
-                  secureTextEntry
+                  secureTextEntry={hidden}
                 />
               </View>
               <View style={{ display: 'flex', top: 383, width: '90%', }}>
@@ -105,12 +126,10 @@ function LoginScreen({ navigation }) {
             </>
           )}
         </Formik>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <View style={{ display: 'flex', alignItems: 'center', top: 428, height: 118, width: 225, }}>
+        <TouchableOpacity onPress={navToRegister} style={{ display: 'flex', alignItems: 'center', top: 428, height: 28, width: 425, }}>
             <Text style={{color: colors.primary, fontSize: 12, fontFamily: 'Inter-Regular'}}>
             Don’t have an account? <Text style={{ fontWeight: "700" }}>Register</Text>
             </Text>
-          </View>
         </TouchableOpacity>
      </View>
     </SafeAreaView>
@@ -132,7 +151,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     top: 103,
-    height: 285,
+    height: 225,
     width: '100%',
     left: 30,
   },
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
   },
   inputContainer2: {
     width: "90%",
-    top: 382,
+    top: 402,
   },
   textInput: {
     backgroundColor: '#f2f2f2',
@@ -163,6 +182,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 5,
     fontFamily: 'Inter-Medium',
+  },
+  backIcon: {
+    padding: 10,
+    marginTop: 20,
+    width: 60,
   },
 });
 

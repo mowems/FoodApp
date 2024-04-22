@@ -25,8 +25,8 @@ function AppButton(props) {
   }
 
   return (
-    <TouchableOpacity onPress={props.onPress}>
-       <View style={styles.button} borderRadius={props.borderRadius} backgroundColor={props.backgroundColor} top={props.top} >
+    <TouchableOpacity onPress={props.onPress} >
+       <View style={styles.button} top={props.top} borderRadius={props.borderRadius} backgroundColor={props.backgroundColor}>
         <Text style={{fontFamily: 'Inter-Medium', color: props.color, fontSize: props.fontSize, fontWeight: '600', lineHeight: 18, }}>{props.title}</Text>
        </View>
     </TouchableOpacity>
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     padding: 15,
     width: 335,
     height: 54,
+    zIndex: 6,
   }
 })
 

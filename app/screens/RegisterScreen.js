@@ -30,6 +30,8 @@ const validationSchema = Yup.object().shape({
 function RegisterScreen({navigation}) {
   const authContext = useContext(AuthContext);
   const [loginFailed, setLoginFailed] = useState(false);
+  const [passwrdIcon, setPasswrdIcon] = useState('eye-off');
+  const [hidden, setHidden] = useState(true);
 
   const [fontsLoaded, fontError] = useFonts({
     'Inter-Bold': require('../assets/fonts/Inter-Bold.ttf'),
@@ -61,16 +63,28 @@ function RegisterScreen({navigation}) {
     authStorage.storeToken(token);
     authStorage.storeUser(JSON.stringify(user));
   }
+  const onPress = () => {
+    navigation.navigate('Welcome');
+  }
+  const onPressIcon = () => {
+    if (passwrdIcon === "eye-off") {
+      setHidden(false);
+      setPasswrdIcon("eye");
+    } else {
+      setHidden(true);
+      setPasswrdIcon("eye-off");
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container} >
-      <WavyHeader cy="0" fill={colors.primary} />
-      <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
-        <Ionicons name="chevron-back" size={24} color="white" style={{top: 40, left: 20}}/>
-      </TouchableOpacity>
+      <WavyHeader cy="-10" fill={colors.primary} />
+        <TouchableOpacity style={styles.backIcon} onPress={onPress}>
+          <Ionicons name="chevron-back" size={34} color="white"/>
+        </TouchableOpacity>
       <View style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
         <View style={styles.imageContainer}>
-          <AppText style={{ fontFamily: 'Inter-Medium', top: 35, fontSize: 34, fontWeight: 700, color: "#ffffff" }} text="Register" />
+          <AppText style={{ fontFamily: 'Inter-Medium', fontSize: 34, fontWeight: 700, color: "#ffffff" }} text="Register" />
           <Image style={{ width: 125, height: 316, marginLeft: 42 }} source={require('../assets/woman.png')} />
         </View>
             <Formik
@@ -97,20 +111,19 @@ function RegisterScreen({navigation}) {
                   />
                   <AppFormField
                     fieldName="password"
-                    iconName="eye-off"
+                    iconName={passwrdIcon}
+                    onPress={onPressIcon}
                     placeholder="your password"
                     value={values.password}
-                    secureTextEntry
+                    secureTextEntry={hidden}
                   />
 
                 </View>
-                <AppButton backgroundColor={colors.primary} borderRadius={10} fontSize={18} title="Register" top={392} color={colors.white} onPress={handleSubmit} />
-                  <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                    <View style={{ display: 'flex', alignItems: 'center', top: 408, height: 118, width: 225, }}>
-                      <Text style={{color: colors.primary, fontSize: 12, fontFamily: 'Inter-Regular'}}>
-                        Have an account? <Text style={{ fontWeight: "700" }}>Login</Text>
-                      </Text>
-                    </View>
+                <AppButton backgroundColor={colors.primary} borderRadius={10} fontSize={18} title="Register" top={342} color={colors.white} onPress={handleSubmit} />
+                  <TouchableOpacity onPress={() => navigation.replace('Login')} style={{ display: 'flex', alignItems: 'center', top: 352, height: 28, width: 225, }}>
+                    <Text style={{color: colors.primary, fontSize: 12, fontFamily: 'Inter-Regular'}}>
+                      Have an account? <Text style={{ fontWeight: "700" }}>Login</Text>
+                    </Text>
                   </TouchableOpacity>
               </>
               )}
@@ -130,8 +143,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     alignItems: 'center',
-    top: 103,
-    height: 285,
+    top: 63,
+    height: 255,
     width: '100%',
     left: 30,
   },
@@ -144,18 +157,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
   },
-  imageContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    alignItems: 'center',
-    top: 103,
-    height: 285,
-    width: '100%',
-    left: 30,
-  },
   inputContainer: {
     width: "90%",
-    top: 381,
+    top: 331,
   },
   passwContainer: {
     display: 'flex',
@@ -184,6 +188,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginLeft: 5,
     fontFamily: 'Inter-Medium',
+  },
+  backIcon: {
+    padding: 10,
+    marginTop: 20,
+    width: 60,
   },
 });
 
